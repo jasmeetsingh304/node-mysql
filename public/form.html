@@ -5,8 +5,23 @@
             <form action="/create_user" method="POST">
                 <input placeholder="firstName" name="first_name">
                 <input placeholder="lastName" name="last_name">
-                <button>Submit</button>
+                <input type="submit" value="Submit">
             </form>
+        </div>
+        <div>
+                <hr>To delete user....<hr>
+                <form action="/delete_user" method="POST">
+                    <input placeholder="userId" name="user_id">
+                    <input type="submit" value="Delete">
+                </form>
+        </div>
+        <div>
+                <hr>To update  user....<hr>
+                <form action="/update_user" method="POST">
+                    <input placeholder="oldName" name="old_name">
+                    <input placeholder="newName" name="new_name">
+                    <input type="submit" value="Update">
+                </form>
         </div>
     </body>
 </html>

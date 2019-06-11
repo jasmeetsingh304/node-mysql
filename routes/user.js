@@ -61,4 +61,35 @@ router.get("/users", (req, res)=>{
          })
  })
 
+ //---------------To delete user from table-----------------
+ router.post("/delete_user", (req, res)=>{
+     const userId = req.body.user_id
+     const queryString = "DELETE FROM users WHERE id="+userId
+     getConnection().query(queryString,(error, results, fields)=>{
+         if(error){
+             console.log("Query Error")
+         }
+         else{
+            console.log("User delete successfully")
+            res.send("User deleted successfully")
+         }
+     })
+ })
+
+ //---------------To update user----------------
+ router.post("/update_user",(req, res)=>{
+    const oldName = req.body.old_name
+    const newName = req.body.new_name
+    const queryString = "update users set firstName = ? where firstName = ?"
+    getConnection().query(queryString,[newName,oldName],(error, results, fields)=>{
+        if(error){
+            console.log("Query Error")
+        }
+        else{
+            console.log("User update successfully")
+            res.send("User updated successfully")
+         }
+    })
+ })
+
 module.exports = router
