@@ -74,13 +74,17 @@ router.post("/signup", (req, res)=>{
 const userName =req.body.user_name
 const emailId = req.body.email_id
 const password = req.body.password
+let hash = bcrypt.hashSync(password, 10);
 const token = "qwertyuiopasdfghjkl"
+console.log(req.body)
+
 
 
 const client = new Client()
 client.userName = req.body.user_name
 client.emailId = req.body.email_id
-client.password = password
+//client.password = password
+client.password = hash
 client.token = token
 client.save((error, result)=>{
     if(!!error){
@@ -96,30 +100,38 @@ client.save((error, result)=>{
 
 
 //---------------To Verify the user credentials---------
-router.get("/login",(req, res)=>{
+router.post("/login",(req, res)=>{
 const userName =req.body.user_name
 const password = req.body.password
-  
 var modata;
-
-Client.findOne({"userName":userName},(error, data)=>{
-if(!!error){
-  console.log("User does not exist")
+try{
+  Client.findOne({"userName":userName},(error, data)=>{
+    if(!data){
+      res.status(404).send({message:"User does not exist"});
+      return;
+    }   
+    modata = JSON.parse(JSON.stringify(data))
+    // if(modata.password == password){
+    //   res.send({"token": modata.token})
+    // } 
+    // else{
+    //   console.log("Password not match ")
+    // }
+    if(bcrypt.compareSync(password, modata.password)) {
+      // Passwords match
+      res.send({"token": modata.token})
+     } else {
+      // Passwords don't match
+      console.log("Password not match ")
+      res.send("Password not match")
+     }
+    
+    
+    })
+}catch(error){
+  res.status(400).send({error})
 }
-else{
-  modata = JSON.parse(JSON.stringify(data))
-  if(modata.password == password){
-    res.send(modata.token)
-  } 
-  else{
-    console.log("Password not match ")
-  }
 
-}
-
-})
-
- 
 })
 
 
