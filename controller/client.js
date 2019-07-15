@@ -75,12 +75,12 @@ const userName =req.body.user_name
 const emailId = req.body.email_id
 const password = req.body.password
 const token = "qwertyuiopasdfghjkl"
-let hash = bcrypt.hashSync(password, 10);
+
 
 const client = new Client()
 client.userName = req.body.user_name
 client.emailId = req.body.email_id
-client.password = hash
+client.password = password
 client.token = token
 client.save((error, result)=>{
     if(!!error){
@@ -99,22 +99,29 @@ client.save((error, result)=>{
 router.get("/login",(req, res)=>{
 const userName =req.body.user_name
 const password = req.body.password
+  
+var modata;
 
-Client.find((error, data)=>{
-    if(!!error){
-        console.log("Query error");
-      }
-      else{
-          console.log("Query successfully submit");
-    }
-    modata = JSON.parse(JSON.stringify(data))
-    if(modata.userName == user_name){
+Client.findOne({"userName":userName},(error, data)=>{
+if(!!error){
+  console.log("User does not exist")
+}
+else{
+  modata = JSON.parse(JSON.stringify(data))
+  if(modata.password == password){
+    res.send(modata.token)
+  } 
+  else{
+    console.log("Password not match ")
+  }
 
-    }
-  })
-
+}
 
 })
+
+ 
+})
+
 
 
 // //---------------To delete user from table-----------------
